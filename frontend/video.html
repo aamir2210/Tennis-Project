@@ -1,0 +1,97 @@
+<!--Video Page-->
+<!--This is the page you go to to improve your tennis game-->
+<!--This page entices the user to buy our products-->
+<!--Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<!--Here is the head section where we set the website title, set the icon, and assign the stylesheet.-->
+	<head>
+
+        <meta charset="UTF-8">
+        
+		<!--Title setup-->
+        <title> Court Crafters </title>
+		<link rel="icon" type="image/x-icon" href="images/Court_Crafters Icon.jpg">
+        <link rel="stylesheet" href="style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="client_side.js"></script>
+
+	</head>
+
+	<!--The body contains all of the page elements from the header to the footer-->
+	<body onload="initializeSession()">
+
+		<!--Top bar-->
+        <p class="top_menu">
+            <div class="icon_bar">
+                <a href="home.html" class="logo"><img src="images/Court_Crafters Logo Small.png" alt="Court Crafters Logo" width="65" height="65"></a>
+                <a href="orderPage.html" class="menu_button" style="padding:0px; margin-bottom:0px; margin-top:-10px; border-color:rgb(41, 41, 41);"><img src="images/cart.png" alt="Cart Icon" width="50" height="50"></a>
+				<p id="cart_bubble" class="bubble"></p>
+                <a href="about.html" class="menu_button"><i>About</i></a>
+                <a href="calculator.html" class="menu_button"><i>Calories</i></a>
+                <a href="video.html" class="menu_button"><i>Videos</i></a>
+                <a href="productPage.html" class="menu_button"><i>Products</i></a>
+            </div>
+        </p>
+
+		<!--Header class sets up the header image and adds the overlayed text-->
+		<header style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/video_banner.jpg')">
+            <div class="header_text">
+                <h1> Videos </h1>
+            </div>
+		</header>
+
+		<!--Heading for a new section-->
+		<h3>
+			Videos to Improve Your Game:
+			<hr>
+		</h3>
+		
+		<!--First video - contains a step by step guide for improving your serve-->
+		<div class="videos" style="height: auto">
+			<p class="vid">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/WGsWsPAtmDk" title="Hit The Best Serves Of Your Life (Tennis Technique Explained)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+			</p>
+			<p class="medium">
+				<h2 style="margin-top: -20px">Here is a Step by Step Guide to Perfect Your Serve:</h2>
+				<ol>
+					<li>Grip It Right: Embrace the continental grip from the get-go. It's your foundation for a killer serve.</li>
+					<li>Step-by-Step Learning: Coordinate your serve with progressions. Take it step by step, and you'll find your rhythm.</li>
+					<li>Perfect Your Toss: Treat your ball toss seriously. Aim for a 1 PM time on the clock – not too high, not too low.</li>
+					<li>Toss Troubles? Retry: If your toss goes south, don't hit it. Toss it again. Legally, you have as many chances as you need.</li>
+					<li>Get your back leg behind the ball: Getting your back leg and weight behind the ball allows for easier weight transfer and a more consistent shot.</li>
+					<li>Location is Key: Your serve should be over your head, not just off your shoulder.</li>
+					<li>Finish Strong: Wrap up your serve over the baseline, then smoothly move back into position behind the baseline.</li>
+					<li>Avoid Foot Faults: Contact with the toss past the baseline results in a foot fault. Stay behind the baseline, and you're in the clear.</li>
+				</ol>
+			</p>
+		</div>
+
+		<!--Second video - contains tips and tricks to improve you tennis form-->
+		<div class="videos">
+			<p class="vid" style="float: right;">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/gWB_7BR458E" title="5 Tennis Hacks To INSTANTLY Improve Your Game" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+			</p>
+			<p class="medium" style="float: left; text-align: left">
+				<h2 style="text-align: left; margin-left: -25px;">Here Are Some Tips and Tricks to Follow to Ensure the Perfect Shots:</h2>
+				<ol style="text-align: left; margin-left: -10px">
+					<li>Early preparation: You can never prepare yourself soon enough. Turn your hips and shoulders before the oncoming ball bounces on your side.</li>
+					<li>Exaggerate your follow through: Follow all the way through your shot after your hit. Hit the ball, follow through, and move your feet.</li>
+					<li>Hit-recover: Instead of focusing on your shot after you’ve made it, focus on the recover. Hit, finish and get back into position.</li>
+					<li>Keep your head still: If you find yourself mis-hitting shots, be sure that you aren’t moving your head as you swing. Follow the ball onto the racquet and keep your head still until the shot has been played.</li>
+					<li>Get your back leg behind the ball: Getting your back leg and weight behind the ball allows for easier weight transfer and a more consistent shot.</li>
+				</ol>
+			</p>
+		</div>
+
+		<!--Footer for author information-->
+		<footer>
+			<p> &copy; Website Made by: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed</p>
+		</footer> 
+
+	</body>
+
+</html>
+		

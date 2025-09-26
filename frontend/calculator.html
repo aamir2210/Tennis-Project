@@ -1,0 +1,72 @@
+<!--Calculator Page-->
+<!--This page is used after you complete a game to track your calories burned-->
+<!--This page when used in conjunction with the video page entices the user to purchase our products-->
+<!--This works because they get more famaliar with our site and interface and are therefore more likely to browse around-->
+<!--Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<!--Here is the head section where we set the website title, set the icon, and assign the stylesheet.-->
+	<head>
+
+        <meta charset="UTF-8">
+        
+		<!--Title setup-->
+        <title> Court Crafters </title>
+		<link rel="icon" type="image/x-icon" href="images/Court_Crafters Icon.jpg">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="client_side.js"></script>
+
+	</head>
+
+	<!--The body contains all of the page elements from the header to the footer-->
+	<body onload="initializeSession()">
+
+        <!--Top bar setup-->
+        <p class="top_menu">
+            <div class="icon_bar">
+                <a href="home.html" class="logo"><img src="images/Court_Crafters Logo Small.png" alt="Court Crafters Logo" width="65" height="65"></a>
+                <a href="orderPage.html" class="menu_button" style="padding:0px; margin-bottom:0px; margin-top:-10px; border-color:rgb(41, 41, 41);"><img src="images/cart.png" alt="Cart Icon" width="50" height="50"></a>
+                <p id="cart_bubble" class="bubble"></p>
+                <a href="about.html" class="menu_button"><i>About</i></a>
+                <a href="calculator.html" class="menu_button"><i>Calories</i></a>
+                <a href="video.html" class="menu_button"><i>Videos</i></a>
+                <a href="productPage.html" class="menu_button"><i>Products</i></a>
+            </div>
+        </p>
+
+		<!--Header class sets up the header image and adds the overlayed text-->
+		<header style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/math_banner.jpg')">
+            <div class="header_text">
+                <h1> Calorie Calculator </h1>
+            </div>
+		</header>
+
+		<!--The description divison here describes the function and usecase of the website-->
+		<div class="description">
+			<p class="large" style="text-align: center;">
+				Here is a calorie calculator which can be used to calculate the calories you burned from your most recent match!
+                <br>
+			</p>
+		</div>
+
+        <!--And here is the calculator div where the calculator UI is created-->
+        <!--Coupled with the js function calorieCalculator() on the button, the calculator takes in your time played and your weight to give you a calories burned count-->
+        <div class="description" style="text-align: center">
+            <div class="calc">
+                <p id="calcdata" class="newdata"></p>
+                Insert weight (lbs):<input id="weight" type="number"> Insert hours played:<input id="hours" type="number"> Insert minutes played:<input id="minutes" type="number">
+                <br><button onclick="calorieCalculator()">Calculate</button>
+            </div>
+        </div>
+
+		<!--Footer for author information-->
+		<footer>
+			<p> &copy; Website Made by: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed</p>
+		</footer> 
+
+	</body>
+
+</html>

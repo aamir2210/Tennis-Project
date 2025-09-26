@@ -1,0 +1,66 @@
+<!--About Page-->
+<!--The about page is where you go when searching for informaiton about our site and history-->
+<!--Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<!--Here is the head section where we set the website title, set the icon, and assign the stylesheet.-->
+	<head>
+
+        <meta charset="UTF-8">
+        
+		<!--Title setup-->
+        <title> Court Crafters </title>
+		<link rel="icon" type="image/x-icon" href="images/Court_Crafters Icon.jpg">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="client_side.js"></script>
+
+	</head>
+
+	<!--The body contains all of the page elements from the header to the footer-->
+	<body onload="initializeSession()">
+
+        <!--Top bar setup-->
+        <p class="top_menu">
+            <div class="icon_bar">
+                <a href="home.html" class="logo"><img src="images/Court_Crafters Logo Small.png" alt="Court Crafters Logo" width="65" height="65"></a>
+                <a href="orderPage.html" class="menu_button" style="padding:0px; margin-bottom:0px; margin-top:-10px; border-color:rgb(41, 41, 41);"><img src="images/cart.png" alt="Cart Icon" width="50" height="50"></a>
+                <p id="cart_bubble" class="bubble"></p>
+                <a href="about.html" class="menu_button"><i>About</i></a>
+                <a href="calculator.html" class="menu_button"><i>Calories</i></a>
+                <a href="video.html" class="menu_button"><i>Videos</i></a>
+                <a href="productPage.html" class="menu_button"><i>Products</i></a>
+            </div>
+        </p>
+
+		<!--Header class sets up the header image and adds the overlayed text-->
+		<header style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/about us.png')">
+            <div class="header_text">
+                <h1> About Us </h1>
+            </div>
+		</header>
+
+		<!--The description divison for the about page describes the history of the website and contact information-->
+		<div class="description">
+			<p class="large" style="text-align: center;">
+				Court Crafters was established in 2017. We are a small team of passionate tennis players that noticed a gap in the online marketplace for dedicated tennis stores with a variety of tennis products!
+                The goal of our website is to provide you, the user, with a fantastic browsing experience for all things tennis.
+                You can browse all of our tennis related products on the products tab. Or you can track the amount of calories you burned during your recent tennis match. You can even watch tennis videos to improve your skill.
+                We are headquartered in Toronto Ontario, Canada. 
+                <br><br>If you have any questions, concerns, or suggestions you can contact us at:
+                <br>E-mail: courtcrafters@gmail.com
+                <br>Phone: +1 (677)-199-8000
+                <br><br> Hours Open: Monday-Saturday, 8AM-6PM
+			</p>
+		</div>
+
+		<!--Footer for author information-->
+		<footer>
+			<p> &copy; Website Made by: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed</p>
+		</footer> 
+
+	</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!--Order Page-->
+<!--NOTICE: REQUIRES SERVER TO BE RAN IN ORDER TO POPULATE THE TABLE WITH YOUR PRODUCTS-->
+<!--USE THE TERMINAL TO START SERVER WITH THE FOLLOWING CODE: ls -> cd backend -> npm start-->
+<!--When it is time to checkout and complete your order you will go here; the order page-->
+<!--Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<!--Here is the head section where we set the website title, set the icon, and assign the stylesheet.-->
+	<head>
+
+        <meta charset="UTF-8">
+        
+		<!--Title setup-->
+        <title> Court Crafters </title>
+		<link rel="icon" type="image/x-icon" href="images/Court_Crafters Icon.jpg">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="client_side.js"></script>
+
+	</head>
+
+	<!--The body contains all of the page elements from the header to the footer-->
+	<body onload="initializeOrderPage()">
+
+        <!--Top bar setup-->
+        <p class="top_menu">
+            <div class="icon_bar">
+                <a href="home.html" class="logo"><img src="images/Court_Crafters Logo Small.png" alt="Court Crafters Logo" width="65" height="65"></a>
+                <a href="orderPage.html" class="menu_button" style="padding:0px; margin-bottom:0px; margin-top:-10px; border-color:rgb(41, 41, 41);"><img src="images/cart.png" alt="Cart Icon" width="50" height="50"></a>
+				<p id="cart_bubble" class="bubble"></p>
+                <a href="about.html" class="menu_button"><i>About</i></a>
+                <a href="calculator.html" class="menu_button"><i>Calories</i></a>
+                <a href="video.html" class="menu_button"><i>Videos</i></a>
+                <a href="productPage.html" class="menu_button"><i>Products</i></a>
+            </div>
+        </p>
+
+        <!--Header for the page-->
+        <div class="order_header">
+
+            <h1>ORDER SUMMARY</h1>
+
+        </div>
+        
+        <div class="content">
+
+            <div>
+
+                <!--Here is the table for your cart-->
+                <!--This will be populated with JS when the SERVER is ran and you have selected items to be added to cart-->
+                <table id="orderSummary">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                        <th>Add/Delete</th>
+                    </tr>
+                </table>
+
+                <br>
+                <p style="margin-left: 317px; margin-right: -20px; font-size: 20px; font-weight: 700; text-align: center; float: left;">Total: $</p>
+                <p id="total" style="margin-right: 317px; margin-left: -20px;; font-size: 20px; font-weight: 700; text-align: center; float: right;"></p>
+
+                <!--Continue to payment button-->
+                <div class="button1">
+                    <br><br><br><br>
+                    <button class="purchase_button">Continue to payment</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

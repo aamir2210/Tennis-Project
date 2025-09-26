@@ -1,0 +1,135 @@
+<!--Home Page-->
+<!--The page where you start-->
+<!--Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<!--Here is the head section where we set the website title, set the icon, and assign the stylesheet.-->
+	<head>
+
+        <meta charset="UTF-8">
+        
+		<!--Title setup-->
+        <title> Court Crafters </title>
+		<link rel="icon" type="image/x-icon" href="images/Court_Crafters Icon.jpg">
+        <link rel="stylesheet" href="style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="client_side.js"></script>
+
+	</head>
+
+	<!--The body contains all of the page elements from the header to the footer-->
+	<body onload="initializeSession()">
+
+		<!--Top bar-->
+        <p class="top_menu">
+            <div class="icon_bar">
+                <a href="home.html" class="logo"><img src="images/Court_Crafters Logo Small.png" alt="Court Crafters Logo" width="65" height="65"></a>
+                <a href="orderPage.html" class="menu_button" style="padding:0px; margin-bottom:0px; margin-top:-10px; border-color:rgb(41, 41, 41);"><img src="images/cart.png" alt="Cart Icon" width="50" height="50"></a>
+				<p id="cart_bubble" class="bubble"></p>
+                <a href="about.html" class="menu_button"><i>About</i></a>
+                <a href="calculator.html" class="menu_button"><i>Calories</i></a>
+                <a href="video.html" class="menu_button"><i>Videos</i></a>
+                <a href="productPage.html" class="menu_button"><i>Products</i></a>
+            </div>
+        </p>
+
+		<!--Header class sets up the header image and adds the overlayed text-->
+		<header>
+            <div class="header_text">
+                <h1> Success is not given, it's earned </h1>
+            </div>
+		</header>
+
+		<!--Announcment division is used for the announcment that stays in the fixed screen position-->
+		<div class="announcement">
+			<p class="large" style="padding:10px;">
+				Announcement! Flash sale on select products! Up to 40% off!
+			</p>
+		</div>
+
+		<!--The description divison adds text to describe the current page-->
+		<div class="description">
+			<p class="large" style="text-align: center;">
+				Welcome to Court Crafters, <i>your</i> tennis marketplace!
+			</p>
+		</div>
+
+		<!--Heading for a new section-->
+		<h3>
+			Featured Products:
+			<hr>
+		</h3>
+
+		<!--The following 3 divs are the featured product divisions. Each contains the specific featured product's picture, and their description.-->
+		<div class="featured">
+			<h2>Babolat Pure Aero Racquet</h2>
+			<p class="images">
+				<img id="feat1" src="images/Babolat Pure Aero Racquet.jpg" alt="Babolat Pure Aero Racquet" width="300" height="200" ondblclick="zoomIn(id)" onclick="zoomOut(id)">
+			</p>
+			<p class="medium">
+				The new Pure Aero Babolat tennis racquet features aerodynamic frame that enables the racket head to move more quickly, and thereby increases ball speed and spin. This tennis racket responds superbly to players who seek power and optimal spin.
+			</p>
+			<p class="large">
+				<span>Was: $299.95<br><i style="color: red;">Now: $249.99!</i></span>
+				<br><br><br><button onclick="addToCart('Babolat Pure Aero Racquet', 249.99)">Add to Cart</button>
+			</p>
+		</div>
+		
+		<!--Second product-->
+		<div class="featured">
+			<h2>Wilson US Open Extra Duty Tennis Balls</h2>
+			<p class="images">
+				<img id="feat2" src="images/Wilson US Open Extra Duty Tennis Balls.jpg" alt="Wilson US Open Extra Duty Tennis Balls" width="300" height="200" ondblclick="zoomIn(id)" onclick="zoomOut(id)">
+			</p>
+			<p class="medium">
+				The US Open Extra Duty Tennis Ball is Approved by USTA & ITF for competitive play and is also the Official Ball of the US Open. It is made with premium woven felt and Ideal performance is on indoor and outdoor hard court surfaces.
+			</p>
+			<p class="large">
+				<span>Was: $9.00<br><i style="color: red;">Now: $6.54!</i></span>
+				<br><br><br><button onclick="addToCart('Wilson US Open Extra Duty Tennis Balls', 6.54)">Add to Cart</button>
+			</p>
+		</div>
+
+		<!--Third product-->
+		<div class="featured">
+			<h2>Wilson Noir Tour 12 Pack Tennis Back</h2>
+			<p class="images">
+				<img id="feat3" src="images/Wilson Noir Tour 12 Pack Tennis Back.jpg" alt="Wilson Noir Tour 12 Pack Tennis Back" width="300" height="200" ondblclick="zoomIn(id)" onclick="zoomOut(id)">
+			</p>
+			<p class="medium">
+				Discreet and functional best describes what the Wilson Noir Tour 12 pack tennis bag offers to each player. Wilson's Tour Collection has always encompassed sharp design, efficient functionality, and long-lasting durability for tennis players worldwide. Equipped with two main compartments that hold up to 12 racquets, this bag offers a dual carry system and extra space for shoes or smaller personal goods in a zippered pocket lined down the center seam.
+			</p>
+			<p class="large">
+				<span>Was: $199.99<br><i style="color: red;">Now: $119.99!</i></span>
+				<br><br><br><button onclick="addToCart('Wilson Noir Tour 12 Pack Tennis Back', 119.99)">Add to Cart</button>
+			</p>
+		</div>
+
+		<!--Heading for a new section-->
+		<h3>
+			Featured Video:
+			<hr>
+		</h3>
+		
+		<!--This section is the featured video section-->
+		<div class="videos">
+			<p class="vid">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/IhinAAE37OY?si=ByfJyo3lvTU0y2L1" title="Hit The Perfect Forehand in 5 Steps - Tennis Forehand Masterclass" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+			</p>
+			<p class="medium">
+				<br><br><br><br>
+				Improve your forehand form with this one simple video. The forehand is the most important shot in tennis as it utilizes your dominant hand to drive the ball towards your opponent.
+				As a result, the forearm can offer the most power and velocity behind the ball if done right. In this tutorial by "Top Tennis Training - Pro Tennis Lessons" on YouTube, you will learn how to properly hold you tennis racket, how to maximize your body's potential energy, where to hit the ball in the swinging process, and proper follow-through form!
+			</p>
+		</div>
+
+		<!--Footer for author information-->
+		<footer>
+			<p> &copy; Website Made by: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed</p>
+		</footer> 
+
+	</body>
+
+</html>

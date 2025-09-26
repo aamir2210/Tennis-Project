@@ -1,0 +1,222 @@
+<!--Product Page-->
+<!--The page most people will go next after the home page-->
+<!--This is where you will shop for our products-->
+<!--Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<!--Here is the head section where we set the website title, set the icon, and assign the stylesheet.-->
+  <head>
+
+    <meta charset="UTF-8">
+        
+		<!--Title setup-->
+    <title> Court Crafters </title>
+		<link rel="icon" type="image/x-icon" href="images/Court_Crafters Icon.jpg">
+    <link rel="stylesheet" href="style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="client_side.js"></script>
+
+	</head>
+
+	<!--The body contains all of the page elements from the header to the footer-->
+	<body onload="initializeSession()">
+
+    <!--Top bar-->
+    <p class="top_menu">
+        <div class="icon_bar">
+            <a href="home.html" class="logo"><img src="images/Court_Crafters Logo Small.png" alt="Court Crafters Logo" width="65" height="65"></a>
+            <a href="orderPage.html" class="menu_button" style="padding:0px; margin-bottom:0px; margin-top:-10px; border-color:rgb(41, 41, 41);"><img src="images/cart.png" alt="Cart Icon" width="50" height="50"></a>
+            <p id="cart_bubble" class="bubble"></p>
+            <a href="about.html" class="menu_button"><i>About</i></a>
+            <a href="calculator.html" class="menu_button"><i>Calories</i></a>
+            <a href="video.html" class="menu_button"><i>Videos</i></a>
+            <a href="productPage.html" class="menu_button"><i>Products</i></a>
+        </div>
+    </p>
+
+    <!--Header class sets up the header image and adds the overlayed text-->
+		<header style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/product_page_banner.png')">
+      <div class="header_text">
+          <h1> Our Products </h1>
+      </div>
+    </header>
+
+    <main>
+
+      <!--This section contains all of the products sold on the site.-->
+      <section id="products">
+
+        <h1 style="margin-left: -10px;">Explore Our Premium Tennis Products:<hr></h1>
+
+        <!--The following 4 'product' divs are the product categories. Each contains the specific products, their pictures, and their descriptions.-->
+        <div class="product">
+
+          <!--Heading for a new product section-->
+          <h2>Tennis Rackets</h2><br>
+
+          <div class="parent">
+
+            <div class="card">
+              <img src="images\WilsonProStaff.webp" alt="Wilson Pro Staff 97" style="width:100%">
+              <h3>Wilson Pro Staff 97</h3>
+              <p class="price">$330.00</p>
+              <p class="product_p">Now in a limited edition all-black colour, the legendary Pro Staff series has been leveled-up to elevate precision, feel and overall impact with this edition being suitable for advanced players with long and fast swings needing a racquet with lots of control.</p>
+              <button class="card_button" onclick="addToCart('Wilson Pro Staff 97', 330.00)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\pureAero.jpg" alt="Babolat Pure Aero" style="width: 38%;">
+              <h3>Babolat Pure Aero</h3>
+              <p class="price" style="color: red">$249.99</p>
+              <p class="product_p">Considered one of the most popular racquets in the past 20 years, the Pure Aero is now an iconic racquet that has been popularized by the great Rafael Nadal. With its unique capability to combine, spin, power, and control, the Pure Aero can be used by intermediate to high advanced players of any kind</p>
+              <button class="card_button" onclick="addToCart('Babolat Pure Aero Racquet', 249.99)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\headSpeed.webp" alt="Head Speed MP" style="width:58%">
+              <h3>Head Speed MP</h3>
+              <p class="price">$280.00</p>
+              <p class="product_p">Designed for speed and control, Head continues with the proven Graphene 360+ material, which is placed in specific points of the racquet to strengthen the frame and provide added power and stability.</p><br>
+              <button class="card_button" onclick="addToCart('Head Speed MP', 280.00)">Add to Cart</button>
+            </div>
+
+          </div>
+         
+          <!--Description of the section-->
+          <p style="font-weight: 700;"><br>Browse through our collection of top-notch tennis rackets from leading brands like Wilson, Babolat, Head, and more.<br></p>
+        
+        </div>
+
+        <div class="product">
+
+          <!--Heading for a new product section-->
+          <h2>Tennis Balls</h2><br>
+
+          <div class="parent">
+
+            <div class="card">
+              <img src="images\proPenn.webp" alt="Pro Penn Marathon Balls" style="width:100%">
+              <h3>Pro Penn Marathon Extra-Duty Tennis Balls</h3>
+              <p class="price">$6.50</p>
+              <p class="product_p">Pro Penn Marathon is Penn’s longest lasting tennis ball featuring exclusive Encore™ Technology for a 22% longer lasting core and high tenacity LongPlay® Felt for extended play. Pro Penn Marathon is the official ball of PTR because of its guaranteed longevity, durability and visibility.</p>
+              <button class="card_button" onclick="addToCart('Pro Penn Marathon Balls', 6.50)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\WilsonTennisBalls.webp" alt="Wilson US Open Extra Duty Tennis Balls" style="width: 100%;">
+              <h3>Wilson US Open Extra Duty Tennis Balls</h3>
+              <p class="price" style="color: red">$7.00</p>
+              <p class="product_p">The Official Ball of the US Open, Wilson US Open Extra Duty Balls are made with premium quality industrial felt and designed for optimal performance and durability on hard courts.</p><br><br>
+              <button class="card_button" onclick="addToCart('Wilson US Open Extra Duty Tennis Balls', 6.54)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\DunlopTennisBalls.webp" alt="Dunlop Australian Open Extra Duty Balls" style="width:100%">
+              <h3>Head Speed MP</h3>
+              <p class="price">$7.50</p>
+              <p class="product_p">Dunlop Australian Open extra duty high-performance tennis ball. Obsessively crafted, meticulously engineered, officially endorsed. The Official Ball of the Australian Open and Emirates Australian Open Series.</p><br><br>
+              <button class="card_button" onclick="addToCart('Dunlop Australian Open Extra Duty Tennis Balls', 7.50)">Add to Cart</button>
+            </div>
+
+          </div>
+
+          <!--Description of the section-->
+          <p style="font-weight: 700;"><br>Stock up on high-quality tennis balls for your practice sessions and matches.<br></p>
+
+        </div>
+
+        <div class="product">
+
+          <!--Heading for a new product section-->
+          <h2>Tennis Shoes</h2><br>
+
+          <div class="parent">
+
+            <div class="card">
+              <img src="images\nikeVapor2.webp" alt="Nike Zoom Vapor Pro 2" style="width:100%">
+              <h3>Nike Zoom Vapor Pro 2</h3>
+              <p class="price">$160.00</p>
+              <p class="product_p">For the rally that won't relent or the marathon match that must end in your favour, go with the Vapor Pro 2. The low-to-the-ground design and the springy Zoom Air cushioning that helps you break from baseline to baseline, with that familiar Vapor comfort that helps keep you fresh on unforgiving surfaces.</p>
+              <button class="card_button" onclick="addToCart('Nike Zoom Vapor Pro 2', 160.00)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\asicsNovak.webp" alt="Asics Court FF 3 Novak" style="width: 100%;">
+              <h3>Asics Court FF 3 Novak</h3>
+              <p class="price" style="color: red">$229.80</p>
+              <p class="product_p">The Asics Court FF 3 tennis shoe is modeled after Novak Djokovic's playing style. These shoes are designed to help you swing stronger and recover quicker between shots.</p><br><br>
+              <button class="card_button" onclick="addToCart('Asics Court FF 3 Novak', 229.80)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\adidasCybersonic.webp" alt="Adidas Adizero Cybersonic" style="width:100%">
+              <h3>Adidas Adizero Cybersonic</h3>
+              <p class="price" style="color: red;">$189.99</p>
+              <p class="product_p">These men's adidas shoes have a lightweight Lightstrike midsole that keeps you close to the court for fast footwork. ENERGYRODS offer propulsion in the forefoot, support in the midfoot and stability in the heel.</p><br>
+              <button class="card_button" onclick="addToCart('Adidas Adizero Cybersonic', 189.99)">Add to Cart</button>
+            </div>
+
+          </div>
+
+          <!--Description of the section-->
+          <p style="font-weight: 700;"><br>Step up your game with our selection of comfortable and durable tennis shoes.<br></p>
+
+        </div>
+
+        <div class="product">
+
+          <!--Heading for a new product section-->
+          <h2>Tennis Bags</h2><br>
+
+          <div class="parent">
+
+            <div class="card">
+              <img src="images\BabolatTennisBag.webp" alt="Babolat Pure Aero Rafa Racquet Bag" style="width:100%">
+              <h3>Babolat Pure Aero Rafa Racquet Bag</h3>
+              <p class="price">$210.00</p>
+              <p class="product_p">The Babolat Pure Aero Rafa 12 Pack Racquet Bag embodies pure tennis and the spirit of Rafael Nadal. A standout in the Pure Aero line of bags to resemble Rafa's custom cosmetic racquet, this bag has a lot of room for your gear and then some thanks to its three large main compartments.</p>
+              <button class="card_button" onclick="addToCart('Babolat Pure Aero Rafa Racquet Bag', 210.00)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\headBag.webp" alt="Head Djokovic Bag" style="width: 100%;">
+              <h3>Head Djokovic Supercombi Racquet Bag</h3>
+              <p class="price">$140.00</p>
+              <p class="product_p">While slightly smaller than its big brother the Monstercombi, the premium Head Djokovic Supercombi 9 Pack Racquet Bag offers enormous amounts of space. Two main compartments, as well as one inside and two outside pockets, offer enough room for everything you need while battling it out on court. </p>
+              <button class="card_button" onclick="addToCart('Head Djokovic Supercombi Racquet Bag', 140.00)">Add to Cart</button>
+            </div>
+            <div class="card">
+              <img src="images\WilsonRFBag.webp" alt="Wilson RF Team Federer Racquet Bag" style="width:100%">
+              <h3>Wilson RF Team Federer Racquet Bag</h3>
+              <p class="price" style="color: red">$104.99</p>
+              <p class="product_p">Roger Federer has been a part of every tennis fans life for the last four decades. The new RF Team line of racquet have a traditional look with minimal cosmetic flare.  The bag holds up to 12 racquets and is a great value for players who don't need fancy features in their bag.</p>
+              <button class="card_button" onclick="addToCart('Wilson RF Team Federer Racquet Bag', 104.99)">Add to Cart</button>
+            </div>
+
+          </div>
+
+          <!--Description for the section-->
+          <p style="font-weight: 700;"><br>Keep your gear organized and protected with our range of tennis bags.<br></p>
+
+        </div>
+
+      </section>
+
+      <!--Here is the 'why choose us' section to really prove to our buyers that we have the best products :D-->
+      <section id="why-choose-us">
+
+        <h2 style="margin-left: -10px;">Why Choose Our Tennis Gear?</h2>
+
+        <ul>
+          <li>Quality Assurance: We only offer products from trusted brands known for their superior quality and performance.</li>
+          <li>Expert Advice: Our team of tennis enthusiasts is here to provide personalized recommendations and answer any questions you may have.</li>
+          <li>Fast Shipping: Get your tennis gear delivered straight to your doorstep quickly and hassle-free.</li>
+          <li>Satisfaction Guaranteed: We stand behind the products we sell and strive to ensure your complete satisfaction with every purchase.</li>
+        </ul>
+
+      </section>
+
+    </main>
+
+    <!--Footer - returns you to top of the page-->
+    <footer class="product_footer">
+      <a href="#" class="shop-now">Shop Now</a>
+    </footer>
+
+</body>
+</html>
