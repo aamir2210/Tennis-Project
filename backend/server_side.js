@@ -1,103 +1,71 @@
-// TYPE THE FOLLOWING CODE IN VS CODE TERMINAL TO RUN THIS SERVER: ls -> cd backend -> npm start
-// Server_Side JavaScript File for Court Crafters site
-// Here is where the server processes the clients requests
-// The information processed relates to the cart:
-// 1. When you add and item to your cart,
-// 2. Updating the cart bubble on the menu, 
-// 3. Updating and populating the cart when you go to the order page,
-// 4. When you remove or change the quantity of an item in your cart.
+// server_side.js
+const express = require("express");
+const cors = require("cors");
 
-// Authors: Ayaz Bhutta, Giovanni Rossi, and Aamir Sayed
+const app = express();
 
-// Get our express set up
-var express = require('express'); 
-var app = express();
-// Add port
-var port = 3000; 
+// middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));   // for form / query fallbacks
+app.use(cors({
+  origin: ["http://localhost:3000", "http://localhost:5173", "https://YOUR-FRONTEND.netlify.app"]
+}));
 
-// Global variables
-var cart = [];
-var items = 0;
+// state
+let cart = [];
+let items = 0;
 
-// Here is where the server is listening for a request from the client
-app.post('/post', (req, res) => {
+// health check
+app.get("/health", (_, res) => res.send("ok"));
 
-    // Print info to console
-    console.log("New express client");
-    console.log("Query received: ");
-    console.log(JSON.parse(req.query['data']));
-
-    // Populate a header response
-    res.header("Access-Control-Allow-Origin", "*");
-    var queryInfo = JSON.parse(req.query['data']);
-
-    // If the action given by the client is addToCart, we will store the cart info
-    if (queryInfo['action'] == 'addToCart') {
-
-        // Get cart info
-        var itemName = queryInfo['name'];
-        var itemPrice = queryInfo['price'];
-        items = queryInfo['items'];
-
-        // Send info to server addToCart function to store
-        addToCart(itemName, itemPrice);
-
-    // The second action is populateCart. This is used when we access the order page
-    } else if (queryInfo['action'] == 'populateCart') {
-
-        // Prepare the response
-        // Here we are just gathering the info to send to the client
-        // The clients action will be to visibly add the information to the cart on the order page
-        var jsontext = JSON.stringify({
-            'action': 'addToCart',
-            'cart': cart,
-            'msg': 'Populating cart!'
-        });
-
-        // Send the cart information to the client	
-        res.send(jsontext);      
-
-    // The third action is update the removal of an item from the cart
-    } else if (queryInfo['action'] == 'removeItem') {
-
-        // Get the item and its row it has been removed from
-        var row = queryInfo['row'];
-
-        // Remove that item from the array
-        cart.pop(row);
-        // Decrement the amount of items
-        items--;
-
-    // The final action is to update the cart bubble. This is ran everytime a page is loaded
-    } else if (queryInfo['action'] == 'populateBubble') {
-
-        // Prepare the response
-        // Gather the up-to-date item information
-        // The action for the client will be to display this updated item information to the user
-        var jsontext = JSON.stringify({
-            'action': 'populateBubble',
-            'items': items,
-            'msg': 'Populating bubble!'
-        });
-
-        // Send the response to the client	
-        res.send(jsontext);       
-
-    }
-
-}).listen(3000);
-console.log("Server is running!");
-
-// Add to cart function where cart info is updated and stored
-function addToCart(itemName, itemPrice) {
-
-    // Create a new item object
-    var newItem = {
-        "itemName": itemName,
-        "itemPrice": itemPrice,
-    }
-
-    // Add this new item to the cart array
-    cart.push(newItem);
-
+// helper: read { action, ... } from body or from ?data=JSON
+function getPayload(req) {
+  if (req.body && Object.keys(req.body).length) return req.body;
+  if (req.query?.data) {
+    try { return JSON.parse(req.query.data); } catch (_) {}
+  }
+  return {};
 }
+
+app.post("/post", (req, res) => {
+  const q = getPayload(req);
+  console.log("New express client");
+  console.log("Payload:", q);
+
+  if (q.action === "addToCart") {
+    const itemName = q.name;
+    const itemPrice = q.price;
+    items = Number(q.items ?? items);
+
+    if (itemName == null || itemPrice == null) {
+      return res.status(400).json({ ok: false, msg: "Missing name or price" });
+    }
+
+    cart.push({ itemName, itemPrice });
+    return res.json({ ok: true, action: "addToCart", items, cart });
+
+  } else if (q.action === "populateCart") {
+    return res.json({ ok: true, action: "populateCart", cart, items });
+
+  } else if (q.action === "removeItem") {
+    const row = Number(q.row);
+    if (Number.isInteger(row) && row >= 0 && row < cart.length) {
+      cart.splice(row, 1);        // remove by index
+      items = Math.max(0, items - 1);
+      return res.json({ ok: true, action: "removeItem", items, cart });
+    }
+    return res.status(400).json({ ok: false, msg: "Invalid row index" });
+
+  } else if (q.action === "populateBubble") {
+    return res.json({ ok: true, action: "populateBubble", items });
+
+  } else {
+    return res.status(400).json({ ok: false, msg: "Unknown action" });
+  }
+});
+
+// IMPORTANT: proper listen for cloud hosts
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on port ${PORT}`);
+});

@@ -4,13 +4,15 @@
   "description": "",
   "main": "server_side.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server_side.js"
   },
+  "engines": { "node": ">=18" },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2"
   }
 }
+
