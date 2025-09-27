@@ -9,7 +9,7 @@
 // Option 2: edit the default below.
 const API_BASE = (typeof window !== "undefined" && window.API_BASE)
   ? window.API_BASE
-  : "https://tennis-project-gei8.onrender.com";
+  : "https://tennis-project-gei8.onrender.com/";  // <-- put your Render URL here
 
 const POST_URL = `${API_BASE}/post`;
 
