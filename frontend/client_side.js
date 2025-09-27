@@ -9,7 +9,7 @@
 // Option 2: edit the default below.
 const API_BASE = (typeof window !== "undefined" && window.API_BASE)
   ? window.API_BASE
-  : "http://localhost:3000";
+  : "https://tennis-project-gei8.onrender.com";
 
 const POST_URL = `${API_BASE}/post`;
 
