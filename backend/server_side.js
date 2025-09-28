@@ -64,38 +64,47 @@ app.post("/post", (req, res) => {
   switch (q.action) {
     case "addToCart": {
       const itemName = q.name;
-      const itemPrice = q.price;
-      items = Number(q.items ?? items);
-
-      if (itemName == null || itemPrice == null) {
-        return res.status(400).json({ ok: false, msg: "Missing name or price" });
+      const itemPrice = Number(q.price);
+  
+      if (!itemName || Number.isNaN(itemPrice)) {
+        return res.status(400).json({ ok: false, msg: "Missing/invalid name or price" });
       }
-
+  
+      // Add item to cart
       cart.push({ itemName, itemPrice });
+  
+      // Always recompute
+      items = cart.length;
+  
       return res.json({ ok: true, action: "addToCart", items, cart });
     }
-
-    case "populateCart": {
-      return res.json({ ok: true, action: "populateCart", cart, items });
-    }
-
+  
     case "removeItem": {
       const idx = Number(q.row);
+  
       if (Number.isInteger(idx) && idx >= 0 && idx < cart.length) {
         cart.splice(idx, 1);
-        items = Math.max(0, items - 1);
+  
+        // Always recompute after removal
+        items = cart.length;
+  
         return res.json({ ok: true, action: "removeItem", items, cart });
       }
+  
       return res.status(400).json({ ok: false, msg: "Invalid row index" });
     }
-
-    case "populateBubble": {
-      return res.json({ ok: true, action: "populateBubble", items });
+  
+    case "populateCart": {
+      return res.json({ ok: true, action: "populateCart", items: cart.length, cart });
     }
-
+  
+    case "populateBubble": {
+      return res.json({ ok: true, action: "populateBubble", items: cart.length });
+    }
+  
     default:
       return res.status(400).json({ ok: false, msg: "Unknown action" });
-  }
+  }  
 });
 
 // --- Listen (Render/Heroku style)

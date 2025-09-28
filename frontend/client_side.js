@@ -14,19 +14,72 @@ const API_BASE =
 
 const POST_URL = `${API_BASE}/post`;
 
-// Small helper to POST JSON to the backend
+// ---------- small fetch helper ----------
 async function postJSON(payload) {
   const res = await fetch(POST_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
-// In initializeSession, we first activate the Google API font loader,
-// then we send a request to the server to update the amount of items in our cart and display it on the bubble
+// ---------- render helpers ----------
+function renderBubble(items) {
+  const bubble = document.getElementById("cart_bubble");
+  if (!bubble) return;
+  const n = Number(items || 0);
+  if (n <= 0) {
+    bubble.innerHTML = "";
+    bubble.style.visibility = "hidden";
+  } else {
+    bubble.innerHTML = n;
+    bubble.style.visibility = "visible";
+  }
+}
+
+function renderTable(cart) {
+  const table = document.getElementById("orderSummary");
+  const totalEl = document.getElementById("total");
+  if (!table || !totalEl) return;
+
+  // Clear all rows except the header (assumes header is rowIndex 0)
+  while (table.rows.length > 1) table.deleteRow(1);
+
+  let total = 0;
+  (cart || []).forEach(item => {
+    const row = table.insertRow(table.rows.length);
+    row.insertCell(0).innerHTML = item.itemName;          // Item
+    row.insertCell(1).innerHTML = 1;                       // Quantity (UI only)
+    row.insertCell(2).innerHTML = Number(item.itemPrice);  // Amount
+    row.insertCell(3).innerHTML =
+      '<button onclick="editData(this)" class="purchase_button">Add</button>' +
+      '<button onclick="deleteData(this)" class="purchase_button">Delete</button>';
+    total += Number(item.itemPrice);
+  });
+
+  totalEl.innerHTML = Math.floor(total);
+}
+
+// ---------- unified response handler ----------
+function handleResponse(resp) {
+  if (!resp || typeof resp !== "object") return;
+
+  // These actions all include the fresh server state (items, cart)
+  if (resp.action === "addToCart" ||
+      resp.action === "removeItem" ||
+      resp.action === "populateCart") {
+    renderBubble(resp.items);
+    renderTable(resp.cart);
+  }
+
+  if (resp.action === "populateBubble") {
+    renderBubble(resp.items);
+  }
+}
+
+// ---------- page initializers ----------
 function initializeSession() {
   // Font loader
   const link = document.createElement("link");
@@ -35,13 +88,12 @@ function initializeSession() {
   link.setAttribute("href", "https://fonts.googleapis.com/css?family=Agdasima:300,400,700");
   document.head.appendChild(link);
 
-  // Update the cart bubble
+  // Bubble from server
   postJSON({ action: "populateBubble" })
-    .then(response)
+    .then(handleResponse)
     .catch(err => console.error("populateBubble error:", err));
 }
 
-// Same as initializeSession, plus populate the order table
 function initializeOrderPage() {
   // Font loader
   const link = document.createElement("link");
@@ -50,154 +102,79 @@ function initializeOrderPage() {
   link.setAttribute("href", "https://fonts.googleapis.com/css?family=Agdasima:300,400,700");
   document.head.appendChild(link);
 
-  // Update cart bubble
+  // Bubble + full cart
   postJSON({ action: "populateBubble" })
-    .then(response)
+    .then(handleResponse)
     .catch(err => console.error("populateBubble error:", err));
 
-  // Populate the cart on the order page
   postJSON({ action: "populateCart" })
-    .then(response)
+    .then(handleResponse)
     .catch(err => console.error("populateCart error:", err));
 }
 
-// Function addToCart activates when any add-to-cart button is pressed on either the home page or product page
-function addToCart(name, price) {
-  // Current item count from the bubble
-  let items = document.getElementById("cart_bubble").innerHTML;
-
-  if (items == null || items === "") {
-    items = 1;
-  } else {
-    items = parseInt(items, 10) + 1;
-  }
-
-  // Reflect in UI immediately
-  document.getElementById("cart_bubble").innerHTML = items;
-  document.getElementById("cart_bubble").style.visibility = "visible";
-  alert(name + " was added to cart!");
-
-  // Tell the server
-  postJSON({
-    name: name,
-    price: Number(price),
-    items: items,
-    action: "addToCart",
-  }).catch(err => console.error("addToCart error:", err));
-}
-
-// Response handler used by populate calls above
-function response(data) {
-  // Ensure object
-  const resp = (typeof data === "string") ? JSON.parse(data) : data;
-
-  // Add rows to order table
-  if (resp.action === "addToCart" || resp.action === "populateCart") {
-    const cart = resp.cart || [];
-    let total = 0;
-
-    const table = document.getElementById("orderSummary");
-    if (!table) return;
-
-    // If you want a clean refresh each time, uncomment the next two lines:
-    // while (table.rows.length > 1) table.deleteRow(1);
-    // total = 0;
-
-    for (let i = 0; i < cart.length; i++) {
-      total += Number(cart[i].itemPrice);
-
-      const newRow = table.insertRow(table.rows.length);
-      newRow.insertCell(0).innerHTML = cart[i].itemName; // Name
-      newRow.insertCell(1).innerHTML = 1;                // Qty
-      newRow.insertCell(2).innerHTML = cart[i].itemPrice;// Price
-      newRow.insertCell(3).innerHTML =
-        '<button onclick="editData(this)" class="purchase_button">Add</button>' +
-        '<button onclick="deleteData(this)" class="purchase_button">Delete</button>';
-    }
-
-    const totalEl = document.getElementById("total");
-    if (totalEl) totalEl.innerHTML = Math.floor(total);
-
-  } else if (resp.action === "populateBubble") {
-    const updateitems = Number(resp.items || 0);
-    const bubble = document.getElementById("cart_bubble");
-    if (!bubble) return;
-
-    if (updateitems <= 0) {
-      bubble.style.visibility = "hidden";
-      bubble.innerHTML = "";
-    } else {
-      bubble.innerHTML = updateitems;
-      bubble.style.visibility = "visible";
-    }
+// ---------- cart actions ----------
+async function addToCart(name, price) {
+  try {
+    const resp = await postJSON({
+      action: "addToCart",
+      name,
+      price: Number(price),
+    });
+    handleResponse(resp);     // bubble + table re-rendered from server
+    alert(name + " was added to cart!");
+  } catch (e) {
+    console.error("addToCart error:", e);
+    alert("Sorry, could not add to cart.");
   }
 }
 
-// Edit quantity on the order page
+async function deleteData(button) {
+  // Which row was clicked? Convert to server index (skip header)
+  const row = button.parentNode.parentNode;
+  const rowIdx = row.rowIndex - 1;
+
+  try {
+    const resp = await postJSON({ action: "removeItem", row: rowIdx });
+    handleResponse(resp);     // bubble + table re-rendered from server
+  } catch (e) {
+    console.error("removeItem error:", e);
+    alert("Sorry, could not remove the item.");
+  }
+}
+
+// ---------- quantity editor (UI-only math) ----------
 function editData(button) {
   const row = button.parentNode.parentNode;
   const quantityCell = row.cells[1];
   const priceCell = row.cells[2];
 
-  const oldPrice = Number(priceCell.innerHTML);
-  const oldQuantity = Number(quantityCell.innerHTML);
+  const oldQty = Number(quantityCell.innerHTML || 1);
+  const oldPrice = Number(priceCell.innerHTML || 0);
 
-  let quantityInput = prompt("Enter the new quantity:", oldQuantity);
-  quantityInput = Number(quantityInput);
+  let qty = prompt("Enter the new quantity:", oldQty);
+  qty = Number(qty);
 
-  while (!Number.isInteger(quantityInput) || quantityInput < 1) {
+  while (!Number.isInteger(qty) || qty < 1) {
     alert("Please enter a value greater than 0!");
-    quantityInput = Number(prompt("Enter the new quantity:", oldQuantity));
+    qty = Number(prompt("Enter the new quantity:", oldQty));
   }
 
-  // Update row cells
-  quantityCell.innerHTML = quantityInput;
+  // Update row visually
+  quantityCell.innerHTML = qty;
 
-  const unit = oldPrice / oldQuantity;
-  const newPrice = unit * quantityInput;
+  const unit = oldPrice / oldQty;
+  const newPrice = unit * qty;
   priceCell.innerHTML = newPrice;
 
-  // Update total
-  const totalEl = document.getElementById("total");
-  const currentTotal = Number(totalEl?.innerHTML || 0);
-  if (totalEl) totalEl.innerHTML = Math.floor(currentTotal - oldPrice + newPrice);
-}
-
-// Delete a row from the order table
-function deleteData(button) {
-  const row = button.parentNode.parentNode;
-  const table = row.parentNode;
-
-  const price = Number(row.cells[2].innerHTML);
-
-  // Remove row from DOM
-  table.removeChild(row);
-
-  // Update bubble
-  const bubble = document.getElementById("cart_bubble");
-  if (bubble) {
-    let num = Number(bubble.innerHTML || 0);
-    num = Math.max(0, num - 1);
-    bubble.innerHTML = num;
-    bubble.style.visibility = num > 0 ? "visible" : "hidden";
-  }
-
-  // Update total
+  // Update total visually (server still stores quantity = 1 per row)
   const totalEl = document.getElementById("total");
   if (totalEl) {
-    const total = Number(totalEl.innerHTML || 0);
-    totalEl.innerHTML = Math.floor(total - price);
+    const currentTotal = Number(totalEl.innerHTML || 0);
+    totalEl.innerHTML = Math.floor(currentTotal - oldPrice + newPrice);
   }
-
-  // If your table has a header row, the first data row index is 1 -> subtract 1.
-  const removedIndex = row.rowIndex - 1;
-
-  // Tell the server which row was removed
-  postJSON({ row: removedIndex, action: "removeItem" })
-    .catch(err => console.error("removeItem error:", err));
 }
 
-// Image zoom helpers
+// ---------- image zoom ----------
 function zoomIn(ID) {
   const el = document.getElementById(ID);
   if (!el) return;
@@ -211,7 +188,7 @@ function zoomOut(ID) {
   el.style.height = "100%";
 }
 
-// Calorie calculator
+// ---------- calorie calculator ----------
 function calorieCalculator() {
   const weight = Number(document.getElementById("weight")?.value || 0);
   const hours  = Number(document.getElementById("hours")?.value || 0);
@@ -225,3 +202,12 @@ function calorieCalculator() {
   if (el) el.innerHTML = "Calories Burned: " + calories + " kCal";
 }
 
+// Exposed init functions if you use them inline in HTML
+window.initializeSession   = initializeSession;
+window.initializeOrderPage = initializeOrderPage;
+window.addToCart           = addToCart;
+window.deleteData          = deleteData;
+window.editData            = editData;
+window.zoomIn              = zoomIn;
+window.zoomOut             = zoomOut;
+window.calorieCalculator   = calorieCalculator;
