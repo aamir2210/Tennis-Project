@@ -8,27 +8,31 @@ const cors = require("cors");
 
 const app = express();
 
-// --- CORS: list the origins that are allowed to call your API
+// --- CORS: allowed origins (Netlify + local dev)
 const allowedOrigins = [
-  "https://precious-jalebi-364a34.netlify.app", // your Netlify site
-  "http://localhost:5173",
-  "http://localhost:3000"
+  "https://precious-jalebi-364a34.netlify.app", // Netlify site
+  "http://localhost:5173",                      // Vite dev
+  "http://localhost:3000"                       // CRA dev
 ];
 
-app.use(cors({
-  origin: function (origin, cb) {
-    // allow tools with no Origin (curl, Postman) and the allowed list
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    return cb(new Error("Not allowed by CORS"));
-  },
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
-}));
+app.use(
+  cors({
+    origin: function (origin, cb) {
+      // allow tools with no Origin (curl, Postman) and the allowed list
+      if (!origin || allowedOrigins.includes(origin)) {
+        return cb(null, true);
+      }
+      return cb(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
-// Handle preflights quickly
+// Handle preflight requests quickly
 app.options("*", cors());
 
-// --- Body parsers (safe even if you also read from req.query)
+// --- Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -43,7 +47,11 @@ app.get("/health", (_req, res) => res.send("ok"));
 function getPayload(req) {
   if (req.body && Object.keys(req.body).length) return req.body;
   if (req.query?.data) {
-    try { return JSON.parse(req.query.data); } catch { /* ignore */ }
+    try {
+      return JSON.parse(req.query.data);
+    } catch {
+      /* ignore */
+    }
   }
   return {};
 }
@@ -95,4 +103,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
