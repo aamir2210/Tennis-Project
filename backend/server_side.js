@@ -10,7 +10,7 @@ const app = express();
 
 // --- CORS: allowed origins (Netlify + local dev)
 const allowedOrigins = [
-  "https://precious-jalebi-364a34.netlify.app", // Netlify site
+  "https://courtcrafters.netlify.app", // Netlify site
   "http://localhost:5173",                      // Vite dev
   "http://localhost:3000"                       // CRA dev
 ];
