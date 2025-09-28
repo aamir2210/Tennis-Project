@@ -7,233 +7,221 @@
 // Option 1 (recommended for deploy): in your HTML's <head> add:
 // <script>window.API_BASE = "https://YOUR-BACKEND.onrender.com";</script>
 // Option 2: edit the default below.
-// Option 2: edit the default below
 const API_BASE =
   (typeof window !== "undefined" && window.API_BASE)
     ? window.API_BASE
-    : "https://tennis-project-gei8.onrender.com"; 
+    : "https://tennis-project-gei8.onrender.com";
 
 const POST_URL = `${API_BASE}/post`;
 
-// Small helper so we don't repeat the $.post pattern
-function postJSON(payload, cb) {
-  $.post(POST_URL + "?data=" + JSON.stringify(payload), cb);
+// Small helper to POST JSON to the backend
+async function postJSON(payload) {
+  const res = await fetch(POST_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return res.json();
 }
 
 // In initializeSession, we first activate the Google API font loader,
 // then we send a request to the server to update the amount of items in our cart and display it on the bubble
 function initializeSession() {
   // Font loader
-  var link = document.createElement("link");
+  const link = document.createElement("link");
   link.setAttribute("rel", "stylesheet");
   link.setAttribute("type", "text/css");
-  link.setAttribute(
-    "href",
-    "https://fonts.googleapis.com/css?family=Agdasima:300,400,700"
-  );
+  link.setAttribute("href", "https://fonts.googleapis.com/css?family=Agdasima:300,400,700");
   document.head.appendChild(link);
 
-  // Request server to update cart item bubble
-  postJSON({ action: "populateBubble" }, response);
+  // Update the cart bubble
+  postJSON({ action: "populateBubble" })
+    .then(response)
+    .catch(err => console.error("populateBubble error:", err));
 }
 
-// Same as the regular initializeSession, but with another server request to populate the cart on the order page
+// Same as initializeSession, plus populate the order table
 function initializeOrderPage() {
   // Font loader
-  var link = document.createElement("link");
+  const link = document.createElement("link");
   link.setAttribute("rel", "stylesheet");
   link.setAttribute("type", "text/css");
-  link.setAttribute(
-    "href",
-    "https://fonts.googleapis.com/css?family=Agdasima:300,400,700"
-  );
+  link.setAttribute("href", "https://fonts.googleapis.com/css?family=Agdasima:300,400,700");
   document.head.appendChild(link);
 
   // Update cart bubble
-  postJSON({ action: "populateBubble" }, response);
+  postJSON({ action: "populateBubble" })
+    .then(response)
+    .catch(err => console.error("populateBubble error:", err));
 
   // Populate the cart on the order page
-  postJSON({ action: "populateCart" }, response);
+  postJSON({ action: "populateCart" })
+    .then(response)
+    .catch(err => console.error("populateCart error:", err));
 }
 
 // Function addToCart activates when any add-to-cart button is pressed on either the home page or product page
 function addToCart(name, price) {
-  // Set item count from the bubble to var items
-  var items = document.getElementById("cart_bubble").innerHTML;
+  // Current item count from the bubble
+  let items = document.getElementById("cart_bubble").innerHTML;
 
-  // If we have no items, it will return undefined -> start at 1
-  if (items == undefined || items === "") {
-    document.getElementById("cart_bubble").innerHTML = "1";
-    document.getElementById("cart_bubble").style.visibility = "visible";
-    alert(name + " was added to cart!");
+  if (items == null || items === "") {
     items = 1;
   } else {
     items = parseInt(items, 10) + 1;
-    document.getElementById("cart_bubble").innerHTML = items;
-    document.getElementById("cart_bubble").style.visibility = "visible";
-    alert(name + " was added to cart!");
   }
 
-  // Update server with the new cart information (no UI response needed)
-  postJSON(
-    {
-      name: name,
-      price: Number(price),
-      items: items,
-      action: "addToCart",
-    },
-    // no callback -> fire-and-forget
-  );
+  // Reflect in UI immediately
+  document.getElementById("cart_bubble").innerHTML = items;
+  document.getElementById("cart_bubble").style.visibility = "visible";
+  alert(name + " was added to cart!");
+
+  // Tell the server
+  postJSON({
+    name: name,
+    price: Number(price),
+    items: items,
+    action: "addToCart",
+  }).catch(err => console.error("addToCart error:", err));
 }
 
-// Here is our response section
-function response(data, status) {
-  // Parse our JSON info into readable JS
-  var response = typeof data === "string" ? JSON.parse(data) : data;
+// Response handler used by populate calls above
+function response(data) {
+  // Ensure object
+  const resp = (typeof data === "string") ? JSON.parse(data) : data;
 
-  // Our first response action is addToCart which is activated when the order page loads
-  // The server sends the latest cart data to the client to be manipulated
-  if (response["action"] == "addToCart") {
-    // Isolate the cart data
-    var cart = response["cart"];
-    var total = 0;
+  // Add rows to order table
+  if (resp.action === "addToCart" || resp.action === "populateCart") {
+    const cart = resp.cart || [];
+    let total = 0;
 
-    // Get the table and insert rows
-    let table = document.getElementById("orderSummary");
+    const table = document.getElementById("orderSummary");
+    if (!table) return;
 
-    // Clear any existing (optional, in case of refresh)
+    // If you want a clean refresh each time, uncomment the next two lines:
     // while (table.rows.length > 1) table.deleteRow(1);
+    // total = 0;
 
-    for (var i = 0; i < cart.length; i++) {
-      // Update total
-      total = total + Number(cart[i]["itemPrice"]);
+    for (let i = 0; i < cart.length; i++) {
+      total += Number(cart[i].itemPrice);
 
-      // Create a new row for our table
-      let newRow = table.insertRow(table.rows.length);
-
-      // Name | Qty | Price | Buttons
-      newRow.insertCell(0).innerHTML = cart[i]["itemName"];
-      newRow.insertCell(1).innerHTML = 1;
-      newRow.insertCell(2).innerHTML = cart[i]["itemPrice"];
+      const newRow = table.insertRow(table.rows.length);
+      newRow.insertCell(0).innerHTML = cart[i].itemName; // Name
+      newRow.insertCell(1).innerHTML = 1;                // Qty
+      newRow.insertCell(2).innerHTML = cart[i].itemPrice;// Price
       newRow.insertCell(3).innerHTML =
         '<button onclick="editData(this)" class="purchase_button">Add</button>' +
         '<button onclick="deleteData(this)" class="purchase_button">Delete</button>';
     }
 
-    // Update our total cost
-    document.getElementById("total").innerHTML = Math.floor(total);
+    const totalEl = document.getElementById("total");
+    if (totalEl) totalEl.innerHTML = Math.floor(total);
 
-    // The second action is to update the bubble
-    // This runs everytime a page is loaded or reloaded
-  } else if (response["action"] == "populateBubble") {
-    // Get latest number of items in cart data from server
-    var updateitems = Number(response["items"] || 0);
+  } else if (resp.action === "populateBubble") {
+    const updateitems = Number(resp.items || 0);
+    const bubble = document.getElementById("cart_bubble");
+    if (!bubble) return;
 
     if (updateitems <= 0) {
-      document.getElementById("cart_bubble").style.visibility = "hidden";
-      document.getElementById("cart_bubble").innerHTML = "";
+      bubble.style.visibility = "hidden";
+      bubble.innerHTML = "";
     } else {
-      document.getElementById("cart_bubble").innerHTML = updateitems;
-      document.getElementById("cart_bubble").style.visibility = "visible";
+      bubble.innerHTML = updateitems;
+      bubble.style.visibility = "visible";
     }
   }
 }
 
-// Here is the editData function that activiates when we hit "add" on the order page
-// This modifies the quantity of the specific row we clicked the button on
+// Edit quantity on the order page
 function editData(button) {
-  // Get the parent row of the clicked button
-  let row = button.parentNode.parentNode;
+  const row = button.parentNode.parentNode;
+  const quantityCell = row.cells[1];
+  const priceCell = row.cells[2];
 
-  // Get the cells within the row
-  let quantity = row.cells[1];
-  let price = row.cells[2];
+  const oldPrice = Number(priceCell.innerHTML);
+  const oldQuantity = Number(quantityCell.innerHTML);
 
-  // We want the old price to adjust the total after the quantity change
-  var oldPrice = Number(price.innerHTML);
-
-  // Prompt the user to enter updated values
-  let oldQuantity = Number(quantity.innerHTML);
   let quantityInput = prompt("Enter the new quantity:", oldQuantity);
-
-  // Ensure valid positive integer quantity
   quantityInput = Number(quantityInput);
+
   while (!Number.isInteger(quantityInput) || quantityInput < 1) {
     alert("Please enter a value greater than 0!");
     quantityInput = Number(prompt("Enter the new quantity:", oldQuantity));
   }
 
-  // Update the cell contents with the new values
-  quantity.innerHTML = quantityInput;
+  // Update row cells
+  quantityCell.innerHTML = quantityInput;
 
-  // Unit price = oldPrice / oldQuantity
   const unit = oldPrice / oldQuantity;
   const newPrice = unit * quantityInput;
-  price.innerHTML = newPrice;
+  priceCell.innerHTML = newPrice;
 
   // Update total
-  var total = Number(document.getElementById("total").innerHTML || 0);
-  document.getElementById("total").innerHTML = Math.floor(total - oldPrice + newPrice);
+  const totalEl = document.getElementById("total");
+  const currentTotal = Number(totalEl?.innerHTML || 0);
+  if (totalEl) totalEl.innerHTML = Math.floor(currentTotal - oldPrice + newPrice);
 }
 
-// Here is the deleteData function which activates when you delete an item from the cart
+// Delete a row from the order table
 function deleteData(button) {
-  // Get the parent row of the clicked button
-  let row = button.parentNode.parentNode;
-  let table = row.parentNode;
+  const row = button.parentNode.parentNode;
+  const table = row.parentNode;
 
-  let price = Number(row.cells[2].innerHTML);
+  const price = Number(row.cells[2].innerHTML);
 
-  // Remove the row from the table
+  // Remove row from DOM
   table.removeChild(row);
 
-  // Update the number of items in the bubble
-  var bubble = document.getElementById("cart_bubble");
-  var num = Number(bubble.innerHTML || 0);
-  num = Math.max(0, num - 1);
-  bubble.innerHTML = num;
-  bubble.style.visibility = num > 0 ? "visible" : "hidden";
+  // Update bubble
+  const bubble = document.getElementById("cart_bubble");
+  if (bubble) {
+    let num = Number(bubble.innerHTML || 0);
+    num = Math.max(0, num - 1);
+    bubble.innerHTML = num;
+    bubble.style.visibility = num > 0 ? "visible" : "hidden";
+  }
 
-  // Update the total price
-  var total = Number(document.getElementById("total").innerHTML || 0);
-  document.getElementById("total").innerHTML = Math.floor(total - price);
+  // Update total
+  const totalEl = document.getElementById("total");
+  if (totalEl) {
+    const total = Number(totalEl.innerHTML || 0);
+    totalEl.innerHTML = Math.floor(total - price);
+  }
 
-  // Figure out the index we removed (minus header row if you have one).
-  // If your table has a header row at index 0, use rowIndex - 1.
-  // If it has no header, use rowIndex directly.
-  // Adjust this line to match your table structure:
+  // If your table has a header row, the first data row index is 1 -> subtract 1.
   const removedIndex = row.rowIndex - 1;
 
-  // Inform server which row index was removed
-  postJSON(
-    {
-      row: removedIndex,
-      action: "removeItem",
-    },
-    // no UI callback needed
-  );
+  // Tell the server which row was removed
+  postJSON({ row: removedIndex, action: "removeItem" })
+    .catch(err => console.error("removeItem error:", err));
 }
 
-// Zoom helpers
+// Image zoom helpers
 function zoomIn(ID) {
-  document.getElementById(ID).style.width = "200%";
-  document.getElementById(ID).style.height = "200%";
+  const el = document.getElementById(ID);
+  if (!el) return;
+  el.style.width = "200%";
+  el.style.height = "200%";
 }
 function zoomOut(ID) {
-  document.getElementById(ID).style.width = "100%";
-  document.getElementById(ID).style.height = "100%";
+  const el = document.getElementById(ID);
+  if (!el) return;
+  el.style.width = "100%";
+  el.style.height = "100%";
 }
 
 // Calorie calculator
 function calorieCalculator() {
-  var weight = Number(document.getElementById("weight").value || 0);
-  var hours = Number(document.getElementById("hours").value || 0);
-  var minutes = Number(document.getElementById("minutes").value || 0);
+  const weight = Number(document.getElementById("weight")?.value || 0);
+  const hours  = Number(document.getElementById("hours")?.value || 0);
+  const minutes= Number(document.getElementById("minutes")?.value || 0);
 
-  var calories = Math.floor(
+  const calories = Math.floor(
     ((hours * 60) + minutes) * (((weight * 0.453592) * 7.1 * 3.5) / 2000)
   );
 
-  document.getElementById("calcdata").innerHTML =
-    "Calories Burned: " + calories + " kCal";
+  const el = document.getElementById("calcdata");
+  if (el) el.innerHTML = "Calories Burned: " + calories + " kCal";
 }
+
