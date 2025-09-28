@@ -1,4 +1,18 @@
 // server_side.js
+var express = require('express');
+var cors = require('cors');
+
+var app = express();
+
+// CORS for your Netlify site (or "*" if you prefer)
+app.use(cors({ origin: '*' })); // or: origin: 'https://<your-netlify-site>.netlify.app'
+
+// These parsers are safe to enable even if you read from req.query
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+
 const express = require("express");
 const cors = require("cors");
 

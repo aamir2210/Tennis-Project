@@ -7,9 +7,11 @@
 // Option 1 (recommended for deploy): in your HTML's <head> add:
 // <script>window.API_BASE = "https://YOUR-BACKEND.onrender.com";</script>
 // Option 2: edit the default below.
-const API_BASE = (typeof window !== "undefined" && window.API_BASE)
-  ? window.API_BASE
-  : "https://tennis-project-gei8.onrender.com/";  // <-- put your Render URL here
+// Option 2: edit the default below
+const API_BASE =
+  (typeof window !== "undefined" && window.API_BASE)
+    ? window.API_BASE
+    : "https://tennis-project-gei8.onrender.com"; 
 
 const POST_URL = `${API_BASE}/post`;
 
